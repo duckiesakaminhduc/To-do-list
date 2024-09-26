@@ -9,6 +9,7 @@ export default function TodoList() {
   const doneTodos = todos.filter((todo) => todo.done);
   const notDoneTodos = todos.filter((todo) => !todo.done);
   const [currentTask, setCurrentTask] = useState<Todo | null>(null);
+
   const addTodo = (task_name: string) => {
     const todo: Todo = {
       name: task_name,
@@ -46,15 +47,22 @@ export default function TodoList() {
   };
 
   const deleteTask = (id: string) => {
-    // const index = todos.findIndex((todo) => {
-    //   todo.id === id;
-    // });
     const index = todos.findIndex((todo) => todo.id === id);
     const newTodos = [...todos];
     newTodos.splice(index, 1);
     setTodos(newTodos);
   };
 
+  const tickTask = (id: string) => {
+    console.log(id);
+    const newTodos = todos.map((todo) => {
+      if (todo.id === id) {
+        return { ...todo, done: !todo.done };
+      }
+      return todo;
+    });
+    setTodos(newTodos);
+  };
   return (
     <div className="main">
       <TaskInput
@@ -67,12 +75,14 @@ export default function TodoList() {
         todos={notDoneTodos}
         startEdit={startEdit}
         deleteTask={deleteTask}
+        tickTask={tickTask}
       />
       <TaskList
         doneTaskList
         todos={doneTodos}
         startEdit={startEdit}
         deleteTask={deleteTask}
+        tickTask={tickTask}
       />
     </div>
   );

@@ -7,20 +7,18 @@ interface TaskListProps {
   todos: Todo[];
   startEdit: (id: string) => void;
   deleteTask: (id: string) => void;
+  tickTask: (id: string) => void;
 }
 
 export default function TaskList(props: TaskListProps) {
-  const { doneTaskList, todos, startEdit, deleteTask } = props;
+  const { doneTaskList, todos, startEdit, deleteTask, tickTask } = props;
   return (
     <div className="tasklist">
       <h2 className="">{doneTaskList ? "Hoàn thành" : "Chưa hoàn thành"}</h2>
       {todos.map((todo) => (
         <div className="task" key={todo.id}>
           <div className="task__bar">
-            <input
-              type="checkbox"
-              // checked={todo.done}
-            />
+            <input type="checkbox" onChange={() => tickTask(todo.id)} checked={doneTaskList}/>
             {/* <span className={`taskName ${doneTaskList ? "taskDone" : ""} `}> */}
             <span className={`taskName ${todo.done ? "taskDone" : ""} `}>
               {todo.name}
