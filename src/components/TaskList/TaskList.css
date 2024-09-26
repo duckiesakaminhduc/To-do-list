@@ -14,3 +14,6 @@ input {
 .taskName.taskDone {
     text-decoration: line-through;
 }
+.tasklist{
+    margin-bottom: 2em;
+}
