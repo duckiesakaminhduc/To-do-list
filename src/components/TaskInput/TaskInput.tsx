@@ -5,20 +5,28 @@ import { Todo } from "../@types/todo.type";
 interface TaskInputProps {
   addTodo: (name: string) => void;
   currentTask: Todo | null;
+  edit: (name: string) => void;
+  doneEdit: () => void;
 }
 
 export default function TaskInput(props: TaskInputProps) {
-  const { addTodo, currentTask } = props;
+  const { addTodo, currentTask, edit, doneEdit } = props;
   const [name, setName] = useState<string>("");
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    addTodo(name);
-    setName("");
+    if (currentTask) {
+      doneEdit();
+    } else {
+      addTodo(name);
+      setName("");
+    }
   };
-
+  //dat input la value = cái gì thì muosn thay đỏi phải gọi hàm setState cái đó,
+  //ví dụ name thì phải setName, value = currentTask thì phải gọi hàm state của currentTask
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setName(event.target.value);
+    if (currentTask) edit(event.target.value);
+    else setName(event.target.value);
   };
   return (
     <div className="">

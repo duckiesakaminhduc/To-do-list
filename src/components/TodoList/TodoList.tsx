@@ -21,6 +21,7 @@ export default function TodoList() {
   const startEdit = (id: string) => {
     let curTask = todos.find((task) => task.id === id);
     if (curTask) setCurrentTask(curTask);
+    console.log(id);
   };
 
   const edit = (name: string) => {
@@ -30,13 +31,49 @@ export default function TodoList() {
     });
   };
 
-  const doneEdit = () => {};
+  //phai set lai todos moi' sau khi chinh sua chu ko pphai return
+  const doneEdit = () => {
+    if (currentTask) {
+      const newTodos = todos.map((item) => {
+        if (item.id === currentTask.id) {
+          return currentTask;
+        }
+        return item;
+      });
+      setTodos(newTodos);
+      setCurrentTask(null);
+    }
+  };
+
+  const deleteTask = (id: string) => {
+    // const index = todos.findIndex((todo) => {
+    //   todo.id === id;
+    // });
+    const index = todos.findIndex((todo) => todo.id === id);
+    const newTodos = [...todos];
+    newTodos.splice(index, 1);
+    setTodos(newTodos);
+  };
 
   return (
     <div className="main">
-      <TaskInput addTodo={addTodo} currentTask={currentTask} />
-      <TaskList todos={notDoneTodos} startEdit={startEdit} />
-      <TaskList doneTaskList todos={doneTodos} startEdit={startEdit} />
+      <TaskInput
+        addTodo={addTodo}
+        currentTask={currentTask}
+        edit={edit}
+        doneEdit={doneEdit}
+      />
+      <TaskList
+        todos={notDoneTodos}
+        startEdit={startEdit}
+        deleteTask={deleteTask}
+      />
+      <TaskList
+        doneTaskList
+        todos={doneTodos}
+        startEdit={startEdit}
+        deleteTask={deleteTask}
+      />
     </div>
   );
 }
