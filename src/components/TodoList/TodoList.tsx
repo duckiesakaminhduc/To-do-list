@@ -3,12 +3,29 @@ import TaskInput from "../TaskInput/TaskInput";
 import TaskList from "../TaskList/TaskList";
 import "./TodoList.css";
 import { Todo } from "../@types/todo.type";
+
+type HandleLocalStorage = (todos: Todo[]) => Todo[];
 export default function TodoList() {
   //dat danh sach task o cha de truyen xuong con
   const [todos, setTodos] = useState<Todo[]>([]);
   const doneTodos = todos.filter((todo) => todo.done);
   const notDoneTodos = todos.filter((todo) => !todo.done);
   const [currentTask, setCurrentTask] = useState<Todo | null>(null);
+
+  useEffect(() => {
+    const todos = localStorage.getItem("todos");
+    const todosString: Todo[] = JSON.parse(todos || "[]");
+    setTodos(todosString);
+  }, []);
+
+  //ham syncLocal nhan vao 1 ham co dang: function() hoac co dang ()=>{}
+  //callback nay nhan vao tham so la 1 array Todo[],xu li mang do roi tra ve 1 mang roi luu vao localstorage
+  const syncLocal = (handleLocalStorage: HandleLocalStorage) => {
+    const localTodos = localStorage.getItem("todos");
+    const localTodosString = JSON.parse(localTodos || "[]");
+    const newLocalTodosString = handleLocalStorage(localTodosString);
+    localStorage.setItem("todos", JSON.stringify(newLocalTodosString));
+  };
 
   const addTodo = (task_name: string) => {
     const todo: Todo = {
@@ -17,6 +34,7 @@ export default function TodoList() {
       id: new Date().toISOString(),
     };
     setTodos((prev) => [todo, ...prev]);
+    syncLocal((todolists) => [todo, ...todolists]);
   };
 
   const startEdit = (id: string) => {
@@ -43,6 +61,7 @@ export default function TodoList() {
       });
       setTodos(newTodos);
       setCurrentTask(null);
+      syncLocal(() => newTodos);
     }
   };
 
@@ -51,6 +70,7 @@ export default function TodoList() {
     const newTodos = [...todos];
     newTodos.splice(index, 1);
     setTodos(newTodos);
+    syncLocal(() => newTodos);
   };
 
   const tickTask = (id: string) => {
@@ -62,6 +82,7 @@ export default function TodoList() {
       return todo;
     });
     setTodos(newTodos);
+    syncLocal(() => newTodos);
   };
   return (
     <div className="main">
