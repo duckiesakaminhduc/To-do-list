@@ -51,17 +51,33 @@ export default function TodoList() {
   };
 
   //phai set lai todos moi' sau khi chinh sua chu ko pphai return
+  // const doneEdit = () => {
+  //   if (currentTask) {
+  //     const newTodos = todos.map((item) => {
+  //       if (item.id === currentTask.id) {
+  //         return currentTask;
+  //       }
+  //       return item;
+  //     });
+  //     setTodos(newTodos);
+  //     setCurrentTask(null);
+  //     syncLocal((todolists) => newTodos);
+  //   }
+  // };
+
   const doneEdit = () => {
     if (currentTask) {
-      const newTodos = todos.map((item) => {
-        if (item.id === currentTask.id) {
-          return currentTask;
-        }
-        return item;
-      });
-      setTodos(newTodos);
+      const handle = (todoObj: Todo[]) => {
+        return todoObj.map((item) => {
+          if (item.id === currentTask.id) {
+            return currentTask;
+          }
+          return item;
+        });
+      };
+      setTodos(handle);
       setCurrentTask(null);
-      syncLocal(() => newTodos);
+      syncLocal(handle);
     }
   };
 
@@ -74,15 +90,25 @@ export default function TodoList() {
   };
 
   const tickTask = (id: string) => {
-    console.log(id);
-    const newTodos = todos.map((todo) => {
-      if (todo.id === id) {
-        return { ...todo, done: !todo.done };
-      }
-      return todo;
-    });
-    setTodos(newTodos);
-    syncLocal(() => newTodos);
+    // console.log(id);
+    // const newTodos = todos.map((todo) => {
+    //   if (todo.id === id) {
+    //     return { ...todo, done: !todo.done };
+    //   }
+    //   return todo;
+    // });
+
+    const handle = (todosObj: Todo[]) => {
+      return todosObj.map((todo) => {
+        if (todo.id === id) {
+          return { ...todo, done: !todo.done };
+        }
+        return todo;
+      });
+    };
+
+    setTodos(handle);
+    syncLocal(handle);
   };
   return (
     <div className="main">
